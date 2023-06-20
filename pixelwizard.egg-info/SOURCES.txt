@@ -1,0 +1,8 @@
+README.md
+setup.py
+pixelwizard/main.py
+pixelwizard.egg-info/PKG-INFO
+pixelwizard.egg-info/SOURCES.txt
+pixelwizard.egg-info/dependency_links.txt
+pixelwizard.egg-info/entry_points.txt
+pixelwizard.egg-info/top_level.txt
