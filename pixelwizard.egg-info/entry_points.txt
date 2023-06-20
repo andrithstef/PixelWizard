@@ -1,3 +1,0 @@
-[console_scripts]
-pixelwizard = pixelwizard.main:main
-

@@ -1,39 +1,39 @@
-# main.py
-from PIL import Image
-from typing import Optional
 import numpy as np
 
-def load_image(filename: str) -> Optional[np.ndarray]:
-    """
-    Loads an image from a file and returns it as a numpy array.
+from .image_loader import load_image, ImageLoadingError
+from .image_processor import show_image, flip_image, mirror_image
+from .help import display_help
 
-    Args:
-        filename (str): The path to the image file.
 
-    Returns:
-        Optional[np.ndarray]: The image as a numpy array, or None if the image could not be loaded.
-    """
-    try:
-        image = Image.open(filename)
-        return np.array(image)
-    except (IOError, FileNotFoundError):
-        print(f"Error: Failed to open image file '{filename}'. Please make sure the file exists.")
-        return None
+def process_commands(image: np.ndarray)->np.ndarray:
+    while True:
+        command = input("Enter a command: (press 'help' for help)\n")
+        if command == "help":
+            display_help()
+        elif command == "show":
+            show_image(image)
+        elif command == "flip":
+            image = flip_image(image)
+        elif command == "mirror":
+            image = mirror_image(image)
+        elif command == "exit":
+            break
+        else:
+            print("Unknown command. Try again.")
+    return image
 
 def main():
-    image_path = input("Enter the path to the image file: ")
-    image = load_image(image_path)
-
-    if image is None:
+    image_path = input("Enter the path to the image file: ") 
+    try:
+        image = load_image(image_path)
+        print("Image loaded successfully!")
+    except ImageLoadingError as e:
+        print("Error: ", str(e))
         return
 
-    width, height,_ = image.shape
-    print("Image loaded successfully!")
-    print("Dimensions: {} x {}". format(width, height))
-    print("PIxel array shape: {} x {}".format(len(image), len(image[0])))
+    image = process_commands(image)
 
-    img = Image.fromarray(image)
-    img.show()
+
 
 if __name__ == '__main__':
     main()
