@@ -8,6 +8,9 @@ setup(
         author='andrithstef',
         description='A simple image editor',
         packages=['pixelwizard'],
+        install_requires=[
+            'Pillow',
+            ],
         entry_points={
             'console_scripts': [
                 'pixelwizard = pixelwizard.main:main'
