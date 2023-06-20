@@ -10,6 +10,7 @@ setup(
         packages=['pixelwizard'],
         install_requires=[
             'Pillow',
+            'numpy',
             ],
         entry_points={
             'console_scripts': [
