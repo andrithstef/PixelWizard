@@ -1,4 +1,5 @@
 import numpy as np
+from skimage import color
 from PIL import Image
 from scipy.signal import convolve2d
 
@@ -65,12 +66,14 @@ def invert_image(image:np.ndarray) -> np.ndarray:
     Returns:
         A numpy array represenging the original image inverted.
     """
+    print("inverting image")
     return -image 
 
 def gaussian_blur(image: np.ndarray, std_dev: float) -> np.ndarray:
     """
     Applies a Gaussian blur to each channel of the image with the given standard deviation
     """
+    print("Blurring image")
     size = int(2 * np.ceil(2 * std_dev) + 1)  # Calculate the kernel size based on the standard deviation
     kernel = _gaussian_kernel(size, std_dev)  # Generate the Gaussian kernel
     
@@ -98,3 +101,82 @@ def _gaussian_distribution(x: int, y: int, std_dev: float) -> float:
     exponent = -(x**2 + y**2) / (2 * std_dev**2)
 
     return coefficient * np.exp(exponent)
+
+
+def adjust_saturation(image:np.ndarray, saturation: float) -> np.ndarray:
+    """
+    Adjusts the saturation of an RGB image.
+
+    Args:
+        image (np.ndarray): The input RGB image.
+        saturation (float): The new saturation of the image. 
+
+    Returns:
+        np.ndarray: The adjusted RGB image with modified saturation.
+
+    Note:
+        - The input image should have shape (height, width, 3).
+        - The input image should have values in the range [0, 255].
+        - The returned image will have integer values in the range [0, 255].
+    """
+    print(f"adjusting saturation to {saturation}")
+    # Convert image to HSV color space
+    hsv_image = color.rgb2hsv(image)
+
+    # Separate the HSV components
+    hue = hsv_image[:, :, 0]
+    saturation_base = np.ones_like(hsv_image[:, :, 1])
+    value = hsv_image[:, :, 2]
+
+    # Modify the saturation component
+    modified_saturation = saturation_base*np.clip(saturation, 0, 1)
+
+    # Combine the modified components back into an HSV image
+    modified_hsv_image = np.stack((hue, modified_saturation, value), axis=-1)
+
+    # Convert the modified HSV image back to RGB color space
+    modified_rgb_image = color.hsv2rgb(modified_hsv_image)
+
+    # Convert the floating-point RGB image to integers
+    modified_rgb_image_int = (modified_rgb_image * 255).astype(np.uint8)
+
+    return modified_rgb_image_int
+
+def adjust_hue(image:np.ndarray, hue: float) -> np.ndarray:
+    """
+    Adjusts the hue of an RGB image.
+
+    Args:
+        image (np.ndarray): The input RGB image.
+        hue (float): The new hue of the image in degrees. 
+
+    Returns:
+        np.ndarray: The adjusted RGB image with modified hue.
+
+    Note:
+        - The input image should have shape (height, width, 3).
+        - The input image should have values in the range [0, 255].
+        - The returned image will have integer values in the range [0, 255].
+    """
+    print(f"Adjusting hue to {hue}")
+    # Convert image to HSV color space
+    hsv_image = color.rgb2hsv(image)
+
+    # Separate the HSV components
+    hue_base = np.ones_like(hsv_image[:, :, 0])
+    saturation = hsv_image[:, :, 1]
+    value = hsv_image[:, :, 2]
+
+    # Modify the saturation component
+    modified_hue = hue_base*(hue%360)
+
+    # Combine the modified components back into an HSV image
+    modified_hsv_image = np.stack((modified_hue, saturation, value), axis=-1)
+
+    # Convert the modified HSV image back to RGB color space
+    modified_rgb_image = color.hsv2rgb(modified_hsv_image)
+
+    # Convert the floating-point RGB image to integers
+    modified_rgb_image_int = (modified_rgb_image * 255).astype(np.uint8)
+
+    return modified_rgb_image_int

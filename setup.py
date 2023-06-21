@@ -11,7 +11,8 @@ setup(
         install_requires=[
             'Pillow',
             'numpy',
-            'scipy'
+            'scipy',
+            "scikit-image"
             ],
         entry_points={
             'console_scripts': [

@@ -16,9 +16,19 @@ def display_help():
     Rotates the image by n * 90 degrees clockwise.
     (Example usage: rotate 1)
 
-- gaussian blur n:
+- gaussian_blur n:
     Blurs the image using Gaussian blur with standard deviation n.
     (Example usage: gaussian blur 2)
+
+- adjust_saturation n:
+    Sets the saturation of the image to the value n.
+    n is a value between 0 and 1.
+    (Example usage: adjust_saturation 0.5)
+
+- adjust_hue n:
+    Sets the hue of the image to the value n.
+    n is a value between 0 and 1.
+    (Example usage: adjust_hue 0.2)
 
 - exit:
     Exit the program.
