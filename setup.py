@@ -11,6 +11,7 @@ setup(
         install_requires=[
             'Pillow',
             'numpy',
+            'scipy'
             ],
         entry_points={
             'console_scripts': [
