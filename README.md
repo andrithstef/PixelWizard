@@ -34,9 +34,20 @@ PixelWizard is a command-line application built in Python. It provides a set of 
 
 ## Installation
 
-1. Clone the repository: `git clone https://github.com/andrithstef/PixelWizard.git`
-2. Navigate to the PixelWizard directory: `cd PixelWizard`
-3. Install the package: `pip install .`
+1. Clone the repository:
+```shell
+git clone https://github.com/andrithstef/PixelWizard.git
+```
+
+2. Navigate to the PixelWizard directory:
+```shell
+cd PixelWizard
+```
+
+3. Install the package: 
+```shell
+pip install .
+```
 
 
 ## Usage
