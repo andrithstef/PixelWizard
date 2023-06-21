@@ -1,7 +1,7 @@
 import numpy as np
 from skimage import color
 from PIL import Image
-from scipy.signal import convolve2d
+from scipy.signal import convolve2d, convolve
 
 def show_image(image: np.ndarray): 
     """
@@ -167,7 +167,7 @@ def adjust_hue(image:np.ndarray, hue: float) -> np.ndarray:
     saturation = hsv_image[:, :, 1]
     value = hsv_image[:, :, 2]
 
-    # Modify the saturation component
+    # Modify the hue component
     modified_hue = hue_base*(hue%360)
 
     # Combine the modified components back into an HSV image
@@ -180,3 +180,43 @@ def adjust_hue(image:np.ndarray, hue: float) -> np.ndarray:
     modified_rgb_image_int = (modified_rgb_image * 255).astype(np.uint8)
 
     return modified_rgb_image_int
+
+def detect_edges(image: np.ndarray, threshold: float) -> np.ndarray:
+    """
+    Detects edges in the image using an edge detection algorithm.
+
+    Args:
+        image (np.ndarray): The input image as a NumPy array.
+        threshold (float): The threshold value used to determine edges.
+            Higher values result in fewer edges being detected.
+
+    Returns:
+        np.ndarray: The edge-detected image as a NumPy array.
+
+    Note:
+        This function applies an edge detection algorithm to the image,
+        highlighting regions with significant intensity changes. The
+        detected edges are determined based on the given threshold value.
+    """
+    # Convert the image to grayscale
+    grayscale = np.mean(image, axis=2)
+
+    # Define the Sobel operator kernels
+    sobel_x = np.array([[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]])
+    sobel_y = np.array([[-1, -2, -1], [0, 0, 0], [1, 2, 1]])
+
+    # Perform convolution with the Sobel kernels
+    gradient_x = convolve(grayscale, sobel_x)
+    gradient_y = convolve(grayscale, sobel_y)
+
+    # Compute the gradient magnitude
+    gradient_magnitude = np.sqrt(gradient_x**2 + gradient_y**2)
+
+    # Normalize the gradient magnitude to the range [0, 255]
+    gradient_magnitude = (gradient_magnitude / np.max(gradient_magnitude)) * 255
+
+    # Apply thresholding to obtain binary edges
+    edges = np.zeros_like(gradient_magnitude)
+    edges[gradient_magnitude > threshold] = 255
+
+    return edges.astype(np.uint8)

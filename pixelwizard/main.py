@@ -4,7 +4,7 @@ from .image_loader import load_image, save_image, ImageLoadingError
 from . import image_processor
 from .help import display_help
 
-def process_commands(image: np.ndarray, image_path: str) -> np.ndarray:
+def process_commands(image: np.ndarray, image_path: str):
     # values correspond to: (function, nr_args, returns_value)
     commands = {
         "help": (display_help, 0, False),
@@ -16,6 +16,7 @@ def process_commands(image: np.ndarray, image_path: str) -> np.ndarray:
         "gaussian_blur": (image_processor.gaussian_blur, 2, True),
         "adjust_saturation": (image_processor.adjust_saturation, 2, True),
         "adjust_hue": (image_processor.adjust_hue, 2, True),
+        "detect_edges": (image_processor.detect_edges, 2, True),
         "reset": (load_image, 0, True),
         "save": (save_image, 2, False),
         "exit": (None, 0, False)  # Use None as the function for the exit command
@@ -23,7 +24,10 @@ def process_commands(image: np.ndarray, image_path: str) -> np.ndarray:
 
     while True:
         user_input = input("Enter a command: (press 'help' for help)\n")
+
+        # input should be on format: function params
         command_parts = user_input.split()
+
 
         if command_parts[0] not in commands:
             print("Unknown command. Try again.")
@@ -39,6 +43,7 @@ def process_commands(image: np.ndarray, image_path: str) -> np.ndarray:
             continue
 
         if command is None:
+            # player asked to exit
             break
 
         if command_parts[0] == "reset":
@@ -63,7 +68,6 @@ def process_commands(image: np.ndarray, image_path: str) -> np.ndarray:
         else:
             command(*args)
 
-    return image
   
 def main():
     image_path = input("Enter the path to the image file: ") 
@@ -74,7 +78,7 @@ def main():
         print("Error: ", str(e))
         return
 
-    image = process_commands(image, image_path)
+    process_commands(image, image_path)
 
 
 
